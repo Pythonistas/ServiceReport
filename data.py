@@ -1,5 +1,12 @@
 users = [
     ('Mal', 'Serenity'),
+    ('Jayne', 'Serenity'),
+    ('Kaylee', 'Serenity'),
+    ('River', 'Serenity'),
+    ('Fred', 'Flintstones'),
     ('Barney', 'Flintstones'),
-    ('Tuxedo', 'I can''t force myself to type this'),
+    ('Gru', 'Despicables' ),
+    ('Fluffy', 'Despicables'),
+    ('Dave', 'Despicables'),
+    ('Tuxedo', 'I can\'t force myself to type this'),
 ]
