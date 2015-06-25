@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{40f06c48-2051-49ac-94b2-1aa8c4d479aa}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>data.py</StartupFile>
+    <StartupFile>ServiceReport.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -21,39 +21,9 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="advlog.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="blah\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="command.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="data.py" />
-    <Compile Include="log.py" />
-    <Compile Include="modules\api.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="modules\client.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="modules\server.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="modules\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="myapp.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="prog.py" />
     <Compile Include="ServiceReport.py" />
     <Compile Include="unit_test.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="blah\" />
-    <Folder Include="modules\" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
