@@ -25,6 +25,14 @@
     <Compile Include="ServiceReport.py" />
     <Compile Include="unit_test.py" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="input.csv">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="output.csv">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
 </Project>
