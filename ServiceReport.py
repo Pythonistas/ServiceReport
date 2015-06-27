@@ -1,4 +1,7 @@
-﻿import data
+﻿import argparse
+import csv
+import data
+
 
 def print_users():
     for name, business_unit in data.users:
@@ -11,7 +14,24 @@ def business_unit_for_user(user_name):
 
 #return [(business unit, service), (business unit, service), ...]
 def read_input(input_file): #[CRP]
-    pass
+    with open(input_file) as csvfile:
+        
+        # Check file for header (Read initial line, and reset read position)
+        has_header = csv.Sniffer().sniff(csvfile.read(1024))
+        csvfile.seek(0)
+        
+        services_and_users = csv.reader(csvfile, delimiter=',')
+
+        # Skip header row
+        if has_header:
+            next(services_and_users)  
+
+        business_unit_and_service = []
+
+        for user, service in services_and_users:
+             business_unit_and_service.append((business_unit_for_user(user),service))
+
+        return business_unit_and_service
 
 #return {service, {business unit, count}, {business unit, count},...} [LR]
 def services_by_business_unit(): #[LR]
@@ -19,3 +39,13 @@ def services_by_business_unit(): #[LR]
 
 def write_report(output_file): #[CRP]
     pass
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('input')
+
+    args = parser.parse_args()
+
+    print(read_input(args.input))
