@@ -5,6 +5,7 @@ def print_users():
         print ("Name: '{0}' Business Unit: '{1}'".format(name, business_unit))
         
 def business_unit_for_user(user_name):
-    # Your code goes here!
-    pass # remove this line once you are done!
+    for name, business_unit in data.users:
+        if name == user_name:
+            return business_unit
 
