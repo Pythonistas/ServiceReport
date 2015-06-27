@@ -16,24 +16,19 @@ def business_unit_for_user(user_name):
 #http://stackoverflow.com/questions/17444679/reading-a-huge-csv-in-python
 def read_input(input_file): #[CRP]
     with open(input_file) as csvfile:
-        
+
         # Check file for header (Read initial line, and reset read position)
         has_header = csv.Sniffer().sniff(csvfile.read(1024))
         csvfile.seek(0)
-        
+
         datareader = csv.reader(csvfile, delimiter=',')
 
         # Skip header row
         if has_header:
-            next(datareader)  
+            next(datareader)
 
-        for row in datareader:
-            yield row
-
-#yield [(business unit, service), (business unit, service), ...]
-def build_business_unit_service(input_file):
-    for user, service in read_input(input_file):
-        yield (business_unit_for_user(user),service)
+        for user, service in datareader:
+            yield (business_unit_for_user(user),service)
 
 #return {service, {business unit, count}, {business unit, count},...} [LR]
 def services_by_business_unit(): #[LR]
@@ -50,5 +45,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    x = [reportdata for reportdata in build_business_unit_service(args.input)]
+    x = [reportdata for reportdata in read_input(args.input)]
     print(x)
