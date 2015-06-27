@@ -44,6 +44,3 @@ if __name__ == '__main__':
     parser.add_argument('input')
 
     args = parser.parse_args()
-
-    x = [reportdata for reportdata in read_input(args.input)]
-    print(x)
