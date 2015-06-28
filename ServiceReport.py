@@ -1,7 +1,8 @@
 ﻿import argparse
+import collections
 import csv
 import data
-
+import pprint
 
 def print_users():
     for name, business_unit in data.users:
@@ -31,8 +32,18 @@ def read_input(input_file): #[CRP]
             yield (business_unit_for_user(user),service)
 
 #return {service, {business unit, count}, {business unit, count},...} [LR]
-def services_by_business_unit(): #[LR]
-    pass
+def services_by_business_unit(service_log): #[LR]
+    def empty_business_unit_summary():
+       return collections.defaultdict(int)
+
+    service_summary = collections.defaultdict(empty_business_unit_summary)
+    for business_unit, service in service_log:
+        bu_dict = service_summary[service]
+        bu_dict[business_unit] += 1
+
+    return service_summary   
+
+        
 
 def write_report(output_file): #[CRP]
     pass
@@ -44,3 +55,7 @@ if __name__ == '__main__':
     parser.add_argument('input')
 
     args = parser.parse_args()
+
+    test_dict = services_by_business_unit(read_input(args.input))
+    pprint.pprint(test_dict)
+    
