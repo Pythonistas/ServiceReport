@@ -2,6 +2,11 @@
 import collections
 import csv
 import data
+import logging
+
+
+# Default Logging:
+logging.basicConfig(format='%(asctime)s.%(msecs)d: %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 
 
 def print_users():
@@ -57,7 +62,7 @@ def write_report(service_log, output_file): #[CRP]
 
     with open(output_file, 'w') as csvfile:
         datawriter = csv.writer(csvfile)
-        #datawriter = csv.writer(csvfile, delimiter=',', lineterminator='\n')
+        #datawriter = csv.writer(csvfile, delimiter=',', lineterminator='\n') #Excel/Windows?
 
         totals = 0
         totals_by_business_unit = {}
@@ -65,29 +70,31 @@ def write_report(service_log, output_file): #[CRP]
             totals_by_business_unit[unit] = 0
 
         #Header
-        datawriter.writerow(['Service'] + list(sorted_business_units()) + ['Subtotals'])
+        rowdata = ['Service'] + list(sorted_business_units()) + ['Total']
+        datawriter.writerow(rowdata)
 
         #Rows
-        for service in sorted(service_summary):
+        for service, service_details in service_summary.items():
+            logging.debug("Service: {0}".format(service))
             rowdata = [service]
             service_subtotal = 0
 
-            for unit in sorted(service_summary[service].keys()):
-                rowdata.append(service_summary[service][unit])
-                service_subtotal += service_summary[service][unit]
-                totals_by_business_unit[unit] += service_summary[service][unit]
+            for business_unit, service_count in service_details.items():
+                logging.debug("Business Unit: {0}, Count: {1}".format(business_unit, service_count))
+                rowdata.append(service_count)
+                service_subtotal += service_count
+                totals_by_business_unit[business_unit] += service_count
 
+            logging.debug("Subtotal: {0}".format(service_subtotal))
             rowdata.append(service_subtotal)
             totals += service_subtotal
 
             datawriter.writerow(rowdata)
 
         #Footer
-        rowdata = ['Totals']
-        for key in totals_by_business_unit:
-            rowdata.append(totals_by_business_unit[key])
-        rowdata.append(totals)
-
+        logging.debug("Business Totals: {0}".format(totals_by_business_unit.values()))
+        logging.debug("Total: {0}".format(totals))
+        rowdata = ['Total'] + totals_by_business_unit.values() + [totals]
         datawriter.writerow(rowdata)
 
 
@@ -97,7 +104,7 @@ if __name__ == '__main__':
 
     parser.add_argument('input')
     parser.add_argument('--output')
-    parser.add_argument('--logging')
+    #parser.add_argument('--logging')
 
     args = parser.parse_args()
 
