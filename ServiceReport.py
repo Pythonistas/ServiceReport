@@ -3,6 +3,7 @@ import collections
 import csv
 import data
 import logging
+from sys import stdout as sys_stdout
 
 
 # Default Logging:
@@ -21,7 +22,7 @@ def business_unit_for_user(user_name):
 
 
 def sorted_business_units():
-    return sorted(set([business_unit for users, business_unit in data.users]))
+    return list(sorted(set([business_unit for users, business_unit in data.users])))
 
 
 #yield [(user, service), (user, service),...]
@@ -56,46 +57,50 @@ def services_by_business_unit(service_log): #[LR]
     return service_summary   
 
 
-def write_report(service_log, output_file): #[CRP]
+def generate_service_report(service_summary): #[CRP]
 
-    service_summary = services_by_business_unit(service_log)
+    service_report = [[] for _ in service_summary]
 
-    with open(output_file, 'w') as csvfile:
-        datawriter = csv.writer(csvfile)
-        #datawriter = csv.writer(csvfile, delimiter=',', lineterminator='\n') #Excel/Windows?
+    totals = 0
+    totals_by_business_unit = {unit: 0 for unit in sorted_business_units()}
 
-        totals = 0
-        totals_by_business_unit = {}
-        for unit in sorted_business_units():
-            totals_by_business_unit[unit] = 0
+    #Header
+    service_report.insert(0,['Service'] + sorted_business_units() + ['Total'])
 
-        #Header
-        rowdata = ['Service'] + list(sorted_business_units()) + ['Total']
-        datawriter.writerow(rowdata)
+    #Rows
+    linenumber = 1
+    for service, service_details in service_summary.items(): # <--- Needs natural sort by service name
+        logging.debug("Service: {0}".format(service))
+        service_report[linenumber].append(service)
+        service_subtotal = 0
 
-        #Rows
-        for service, service_details in service_summary.items():
-            logging.debug("Service: {0}".format(service))
-            rowdata = [service]
-            service_subtotal = 0
+        for business_unit, service_count in service_details.items(): # <--- Needs natural sort by business unit to match header columns
+            logging.debug("Business Unit: {0}, Count: {1}".format(business_unit, service_count))
+            service_report[linenumber].append(service_count)
+            service_subtotal += service_count
+            totals_by_business_unit[business_unit] += service_count
 
-            for business_unit, service_count in service_details.items():
-                logging.debug("Business Unit: {0}, Count: {1}".format(business_unit, service_count))
-                rowdata.append(service_count)
-                service_subtotal += service_count
-                totals_by_business_unit[business_unit] += service_count
+        logging.debug("Subtotal: {0}".format(service_subtotal))
+        service_report[linenumber].append(service_subtotal)
+        totals += service_subtotal
+        linenumber += 1
 
-            logging.debug("Subtotal: {0}".format(service_subtotal))
-            rowdata.append(service_subtotal)
-            totals += service_subtotal
+    #Footer
+    logging.debug("Business Totals: {0}".format(totals_by_business_unit.values()))
+    logging.debug("Total: {0}".format(totals))
+    service_report.append(['Total'] + totals_by_business_unit.values() + [totals])
 
-            datawriter.writerow(rowdata)
+    return service_report
 
-        #Footer
-        logging.debug("Business Totals: {0}".format(totals_by_business_unit.values()))
-        logging.debug("Total: {0}".format(totals))
-        rowdata = ['Total'] + totals_by_business_unit.values() + [totals]
-        datawriter.writerow(rowdata)
+
+def write_output(file, content):
+    try:
+        with open(file, 'w') as csvfile:
+            datawriter = csv.writer(csvfile)
+            datawriter.writerows(content)
+    except TypeError:
+        for line in content:
+            sys_stdout.write(', '.join(map(str, line)) + '\n')
 
 
 if __name__ == '__main__':
@@ -108,4 +113,14 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    write_report(read_input(args.input), args.output)
+    # Collect service log information from input file
+    service_log = read_input(args.input)
+
+    # Build service summary (Services listed by business unit)
+    service_summary = services_by_business_unit(service_log)
+
+    # Build service report (Header; Services with counts per business unit and subtotal; Footer)
+    service_report = generate_service_report(service_summary)
+
+    # Write report to either screen or designated output file
+    write_output(args.output, service_report)
