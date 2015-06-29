@@ -74,7 +74,7 @@ def generate_service_report(service_summary): #[CRP]
         service_report[linenumber].append(service)
         service_subtotal = 0
 
-        for business_unit, service_count in service_details.items(): # <--- Needs natural sort by business unit to match header columns
+        for business_unit, service_count in sorted(service_details.items()): # Sorted by business unit to match header columns
             logging.debug("Business Unit: {0}, Count: {1}".format(business_unit, service_count))
             service_report[linenumber].append(service_count)
             service_subtotal += service_count
