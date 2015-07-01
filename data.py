@@ -8,5 +8,5 @@ users = [
     ('Gru', 'Despicables' ),
     ('Fluffy', 'Despicables'),
     ('Dave', 'Despicables'),
-    ('Tuxedo', 'I can\'t force myself to type this'),
+    ('Dr. Nefario', 'Despicables'),
 ]
