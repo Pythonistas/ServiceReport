@@ -12,7 +12,7 @@ logging.basicConfig(format='%(asctime)s.%(msecs)d: %(levelname)s: %(message)s', 
 
 def print_users():
     for name, business_unit in data.users:
-        print ("Name: '{0}' Business Unit: '{1}'".format(name, business_unit))
+        print("Name: '{0}' Business Unit: '{1}'".format(name, business_unit))
 
 
 def business_unit_for_user(user_name):
@@ -25,9 +25,9 @@ def sorted_business_units():
     return list(sorted(set([business_unit for users, business_unit in data.users])))
 
 
-#yield [(user, service), (user, service),...]
-#http://stackoverflow.com/questions/17444679/reading-a-huge-csv-in-python
-def read_input(input_file): #[CRP]
+# yield [(user, service), (user, service),...]
+# http://stackoverflow.com/questions/17444679/reading-a-huge-csv-in-python
+def read_input(input_file):  # [CRP]
     with open(input_file) as csvfile:
 
         # Check file for header (Read initial line, and reset read position)
@@ -41,40 +41,40 @@ def read_input(input_file): #[CRP]
             next(datareader)
 
         for user, service in datareader:
-            yield (business_unit_for_user(user).strip(),service.strip())
+            yield (business_unit_for_user(user).strip(), service.strip())
 
 
-#return {service, {business unit, count}, {business unit, count},...} [LR]
-def services_by_business_unit(service_log): #[LR]
+# return {service, {business unit, count}, {business unit, count},...} [LR]
+def services_by_business_unit(service_log):  # [LR]
     def empty_business_unit_summary():
-       return collections.defaultdict(int)
+        return collections.defaultdict(int)
 
     service_summary = collections.defaultdict(empty_business_unit_summary)
     for business_unit, service in service_log:
         bu_dict = service_summary[service]
         bu_dict[business_unit] += 1
 
-    return service_summary   
+    return service_summary
 
 
-def generate_service_report(service_summary): #[CRP]
+def generate_service_report(service_summary):  # [CRP]
 
     service_report = [[] for _ in service_summary]
 
     totals = 0
     totals_by_business_unit = {unit: 0 for unit in sorted_business_units()}
 
-    #Header
-    service_report.insert(0,['Service'] + sorted_business_units() + ['Total'])
+    # Header
+    service_report.insert(0, ['Service'] + sorted_business_units() + ['Total'])
 
-    #Rows
+    # Rows
     linenumber = 1
-    for service, service_details in service_summary.items(): # <--- Needs natural sort by service name
+    for service, service_details in service_summary.items():  # <--- Needs natural sort by service name
         logging.debug("Service: {0}".format(service))
         service_report[linenumber].append(service)
         service_subtotal = 0
 
-        for business_unit, service_count in sorted(service_details.items()): # Sorted by business unit to match header columns
+        for business_unit, service_count in sorted(service_details.items()):  # Sorted by business unit to match header columns
             logging.debug("Business Unit: {0}, Count: {1}".format(business_unit, service_count))
             service_report[linenumber].append(service_count)
             service_subtotal += service_count
@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
     parser.add_argument('input')
     parser.add_argument('--output')
-    #parser.add_argument('--logging')
+    # parser.add_argument('--logging')
 
     args = parser.parse_args()
 
