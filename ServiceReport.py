@@ -85,10 +85,10 @@ def generate_service_report(service_summary):  # [CRP]
         totals += service_subtotal
         linenumber += 1
 
-    #Footer
+    # Footer
     logging.debug("Business Totals: {0}".format(totals_by_business_unit.values()))
     logging.debug("Total: {0}".format(totals))
-    service_report.append(['Total'] + totals_by_business_unit.values() + [totals])
+    service_report.append(['Total'] + list(totals_by_business_unit.values()) + [totals])
 
     return service_report
 
@@ -96,7 +96,7 @@ def generate_service_report(service_summary):  # [CRP]
 def write_output(file, content):
     try:
         with open(file, 'w') as csvfile:
-            datawriter = csv.writer(csvfile)
+            datawriter = csv.writer(csvfile, lineterminator='\n')
             datawriter.writerows(content)
     except TypeError:
         for line in content:
