@@ -107,8 +107,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('input')
-    parser.add_argument('--output')
+    parser.add_argument('input', help='csv file of clients and provided services')
+    parser.add_argument('--output', help='csv file of business units and total services used')
     # parser.add_argument('--logging')
 
     args = parser.parse_args()
