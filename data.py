@@ -5,7 +5,7 @@ users = [
     ('River', 'Serenity'),
     ('Fred', 'Flintstones'),
     ('Barney', 'Flintstones'),
-    ('Gru', 'Despicables' ),
+    ('Gru', 'Despicables'),
     ('Fluffy', 'Despicables'),
     ('Dave', 'Despicables'),
     ('Dr. Nefario', 'Despicables'),
